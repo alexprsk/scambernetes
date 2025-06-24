@@ -1,0 +1,17 @@
+#Not required for minikube
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: standard #define storageClassname in a diff file, then change the name here too
+  hostPath:
+    path: /data/mongo
+    type: DirectoryOrCreate
