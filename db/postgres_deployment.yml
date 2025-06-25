@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgresql
   labels:
-    app: postgres
+    app: postgresql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgresql
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgresql
     spec:
       containers:
-      - name: postgres
-        image: postgres
+      - name: postgresql
+        image: bitnami/postgresql:latest
         ports:
         - containerPort: 5432
         env:
-          - name: POSTGRES_PASSWORD
+          - name: POSTGRESQL_PASSWORD
             value: password
-          - name: POSTGRES_DB
+          - name: POSTGRESQL_DATABASE
             value: scambet
         volumeMounts:
-        - mountPath: /var/lib/postgresql/data
+        - mountPath: /bitnami/postgresql
           name: pgdata
         resources:
           requests:
@@ -37,7 +37,7 @@ spec:
       volumes:
       - name: pgdata
         persistentVolumeClaim:
-          claimName: postgres-pvc 
+          claimName: postgresql-pvc 
 
 
 ---
@@ -45,7 +45,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pvc
+  name: postgresql-pvc
 spec:
   storageClassName: standard
   accessModes:

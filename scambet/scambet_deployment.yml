@@ -24,6 +24,12 @@ spec:
         image: ghcr.io/alexprsk/prd.scambet:latest
         ports:
         - containerPort: 8000
+        # Remove envFrom if you rely on prod.env file
+        volumeMounts:
+        - name: dotenv-volume
+          mountPath: /app/prod.env
+          subPath: prod.env
+          readOnly: true
         resources:
           requests:
             memory: "128Mi"
@@ -31,5 +37,9 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
+      volumes:
+      - name: dotenv-volume
+        configMap:
+          name: dotenv
       imagePullSecrets:
       - name: ghcr-secret
