@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scambet
+  name: scambet 
   labels:
-    app: scambet
+    app: scambet #deployment label
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: scambet
+      app: scambet #Tells the Deployment which Pods it "owns" (so it can manage them).
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,14 +17,13 @@ spec:
   template:
     metadata:
       labels:
-        app: scambet
+        app: scambet # Labels the Pods created by this Deployment.
     spec:
       containers:
       - name: scambet
         image: ghcr.io/alexprsk/prd.scambet:latest
         ports:
         - containerPort: 8000
-        # Remove envFrom if you rely on prod.env file
         volumeMounts:
         - name: dotenv-volume
           mountPath: /app/prod.env
@@ -43,3 +42,17 @@ spec:
           name: dotenv
       imagePullSecrets:
       - name: ghcr-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: scambet
+spec:
+  selector:
+    app: scambet
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
